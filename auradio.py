@@ -83,7 +83,7 @@ def setvol(argument):
 
 
 def radioset():
-    now = 0
+    now = -1
 
     while True:
         radx = 4
