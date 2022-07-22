@@ -1,8 +1,0 @@
-Classic Rock Florida   http://us4.internet-radio.com:8258/
-Megaton Cafe Radio     http://us2.internet-radio.com:8443/
-Pal Nostalji           http://shoutcast.radyogrup.com:1010
-Bakaradio              http://144.217.203.184:8398/stream
-Metro FM               http://17773.live.streamtheworld.com/METRO_FM_SC?&
-Fenomen Akustik        http://fenomenakustik.listenfenomen.com/fenomenakustik/128/icecast.audio
-Fenomen                http://fenomen.listenfenomen.com/fenomen/128/icecast.audio
-Joytürk Akustik        https://21253.live.streamtheworld.com/SC004_SO1_SC?/;stream.mp3

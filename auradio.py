@@ -1,295 +1,143 @@
-#!/usr/bin/python3
-from os import system, name
+# Dear programmer:
+# When I wrote this code, only god and
+# I knew how it worked.
+# Now, only god knows it!
+#
+# Therefore, if you are trying to optimize
+# this routine and it fails (most surely),
+# please increase this counter as a
+# warning for the next person:
+#
+# total_hours_wasted_here: 254
+
 from time import sleep
+import curses
 import weakref
-import pafy
 import vlc
+import json
 import os
 
-os.environ["VLC_VERBOSE"] = str("-1")  # thanks to rickie95
+#os.environ["VLC_VERBOSE"] = str("-1")
+
+stdscr = curses.initscr()
+curses.noecho()
+curses.curs_set(0)
+stdscr.keypad(1)
+curses.mousemask(1)
+
+ses = 40
+
+loc = os.path.dirname(__file__)
+with open(loc + '/data.json') as f:
+    radio = json.load(f)
+
 
 def auradio():
-    print('''                              
+    stdscr.addstr('''                              
                                 _ _        
        __ _ _   _ _ __ __ _  __| (_) ___   
       / _` | | | | '__/ _` |/ _` | |/ _ \  
      | (_| | |_| | | | (_| | (_| | | (_) | 
       \__,_|\__,_|_|  \__,_|\__,_|_|\___/  
                                            
-    ''')                                   
+    ''')
+    stdscr.refresh()
     sleep(0.4)
+    stdscr.clear()
 
 
-class radio:
-    instances = []
-
-    def __init__(self, number, radioname, url):
-        self.__class__.instances.append(weakref.proxy(self))
-        self.number = number
-        self.radioname = radioname
-        self.url = url
-
-    def __str__(self):
-        return self.number + ' ~ ' + self.radioname
-
-
-CRFlorida =   radio('1' , 'Classic Rock Florida' ,'https://cutt.ly/AvFrd9g')
-Megaton =     radio('2' , 'Megaton Cafe Radio'   ,'https://cutt.ly/SvFro84')
-Palnostalji = radio('3' , 'Pal Nostalji'         ,'https://cutt.ly/TvFrupx')
-Bakaradio =   radio('4' , 'Bakaradio'            ,'https://cutt.ly/fvFreAS')
-Metrofm =     radio('5' , 'Metro FM'             ,'https://cutt.ly/wvFe7Pm')
-FAkustik =    radio('6' , 'Fenomen Akustik'      ,'https://cutt.ly/YvFe9Qn')
-Fenomen =     radio('7' , 'Fenomen'              ,'https://cutt.ly/3vFeBXO')
-Jakustik =    radio('8' , 'Joytürk Akustik'      ,'https://cutt.ly/BvD7r2Q')
-
-def radiochan():
-    while True:
-        system('cls')
-        for instance in radio.instances:
-            print(instance)
-
-        print('\nYou can return to the previous menu by typing "back".')
-        print('You can close the program by typing "exit".')
-        radioin = input('\n$ ')
-        if radioin == 'back':
-            system('cls')
-            return
-        elif radioin == 'exit':
-            system('cls')
-            bye()
-
-        try:
-            url, radioname = urlsearch(radioin)
-            if url:
-                break
-        except:
-            pass
-    radioplayer(url, radioname)
-
-def urlsearch(radioin):
-    for instance in radio.instances:
-        if instance.number == radioin:
-            return instance.url, instance.radioname
-
-def getinfo(player):
-    media = player.get_media()
-    info = str(media.get_meta(12))
-    info = info.split("-")
-    artist = info[0]
-    track = info[1]
-    return artist, track
-
-def radiomenu():
-    print('1 ~ Show current playing track')
-    print('2 ~ Go back to the list')
-    print('3 ~ Volume up')
-    print('4 ~ Volume down')
-    print('0 ~ Disconnect\n')
-
-def radioplayer(url, radioname):
-    system('cls')
+def playerset(url):
+    global ses
 
     vlc_instance = vlc.Instance('-q')
     player = vlc_instance.media_player_new()
-    media = vlc_instance.media_new(url)
-    player.set_media(media)
 
-    ses = 30
+    player.set_media(vlc_instance.media_new(url))
     player.audio_set_volume(ses)
+
     player.play()
+    return player
 
-    radiomenu()
-    while player.play:
 
-        cat = input('$ ')
-        if (cat.lower() == '1'):
+def volbar():
+    stdscr.addstr(0, 0, '┌')
+    stdscr.addstr(0, 2, '┐')
+    stdscr.addstr(11, 0, '└')
+    stdscr.addstr(11, 2, '┘')
 
-            system('cls')
-            radiomenu()
-            try:
-                print('Radio ~ ' + radioname)
-                artist, track = getinfo(player)
-                print('Song ~'+track+' by '+artist+'\n')
-            except:
-                pass
-        elif (cat.lower() == '2'):
-            player.stop()
-            break
-        elif (ses < 100 and cat.lower() == '3'):
+    for i in range(1, 11):
+        stdscr.addstr(i, 0, '│')
+        stdscr.addstr(i, 2, '│')
+        stdscr.addstr(i, 1, '─')
 
-            ses = ses + 5
-            player.audio_set_volume(ses)
-            system('cls')
-            radiomenu()
-            print('V ~ Current volume is:', ses)
+    a = int(ses/10)
+    while a > 0:
+        stdscr.addstr(11 - a, 1, '▆')
+        a = a - 1
 
-        elif (ses > 0 and cat.lower() == "4"):
 
-            ses = ses - 5
-            player.audio_set_volume(ses)
-            system('cls')
-            radiomenu()
-            print('V ~ Current volume is:', ses)
-        elif (cat.lower() == '0'):
-            system('cls')
-            bye()
-        else:
-            system('cls')
-            radiomenu()
-    radiochan()
+def setvol(argument):
+    switcher = {1: 100, 2: 90, 3: 80, 4: 70, 5: 60,
+                6: 50, 7: 40, 8: 30, 9: 20, 10: 10, 11: 0, }
+    return switcher.get(argument, "nothing")
 
-def youtubechan():
-    youtubeurl = ''
+
+def radioset():
+    now = 0
+
     while True:
-        system('cls')
-        print('You can return to the previous menu by typing "back".')
-        print('You can close the program by typing "exit".')
-        vid = input('\nEnter url $ ')
+        radx = 4
+        rady = 1
 
-        if vid == "back":
-            system('cls')
-            return
+        for w in radio:
+            stdscr.addstr(rady, radx, str(w["name"]))
 
-        elif vid == 'exit':
-            bye()
+            if (int(w["number"]) == now):
+                stdscr.addstr(rady, radx, str(w["name"]), curses.A_BOLD)
 
-        try:
-            audio = pafy.new(vid)
-            best = audio.getbestaudio()
-            youtubeurl = best.url
-            if youtubeurl:
-                break
-        except:
-            pass
-        
-    youtubeplayer(youtubeurl,audio)
+            if rady == 10:
+                rady = 0
+                radx = radx + 23
+                for i in range(1, 11):
+                    stdscr.addstr(i, radx-2, '│')
+            rady = rady + 1
 
-def youtubemenu():
-    print('1 ~ Show current playing track')
-    print('2 ~ Take another url')
-    print('3 ~ Volume up')
-    print('4 ~ Volume down')
-    print('0 ~ Disconnect\n')
+        volbar()
 
-def youtubeplayer(url,audio):
-    system('cls')
+        event = stdscr.getch()
 
-    vlc_instance = vlc.Instance('-q')
-    player = vlc_instance.media_player_new()
-    media = vlc_instance.media_new(url)
-    player.set_media(media)
-    
-    ses = 30
-    player.audio_set_volume(ses)
-    player.play()
-    youtubemenu()
-    
-    #while player.is_playing() == 1:
-    #print(player.is_playing())
-    
-    while player.play:
+        if event == curses.KEY_MOUSE:
+            try: click = curses.getmouse()
+            except: break
 
-        
-        
-        cat = input()
+            if (click[2] <= 10 and click[2] >= 1 and click[1] < (int((len(radio)/10)*23)+2)):
 
-        if (cat.lower() == '1'):
+                if click[1] < 3:
+                    global ses
+                    ses = setvol(click[2])
+                    try:
+                        scream.audio_set_volume(ses)
+                        continue
+                    except: pass
 
-            system('cls')
-            youtubemenu()
-            
-            try:
-                print('Title ~ ' + audio.title)
-                print('Rating ~ ' + str(audio.rating))
-                print('Author ~ ' + audio.author)
-                print('Duration ~ ' + audio.duration + "\n")   
-            except:
-                pass
-        elif (cat.lower() == '2'):
-            player.stop()
-            break
-        elif (ses < 100 and cat.lower() == '3'):
+                # i dont know whats going on and
+                # at this point i'm too afraid to ask
+                now = (int((click[1]-2)/23)*10+click[2]-1)
 
-            ses = ses + 5
-            player.audio_set_volume(ses)
-            system('cls')
-            youtubemenu()
-            print('V ~ Current volume is:', ses)
+                for w in radio:
+                    if (str(w["number"]) == str(now)):
+                        
+                        try: scream.stop()
+                        except: pass
 
-        elif (ses > 0 and cat.lower() == '4'):
-            ses = ses - 5
-            player.audio_set_volume(ses)
-            system('cls')
-            youtubemenu()
-            print('V ~ Current volume is:', ses)
-        elif (cat.lower() == "0"):
-            system('cls')
-            bye()
-    youtubechan()
+                        scream = playerset(str(w["url"]))
 
-def bye():
-    print("\nI don't like goodbyes ~\n")
-    exit()
-
-def chanplayer(path):
-
-    vlc_instance = vlc.Instance('-q')
-    chanplayer = vlc_instance.media_player_new()
-    media = vlc_instance.media_new(path)
-    chanplayer.set_media(media)
-
-    chanplayer.audio_set_volume(75)
-    chanplayer.play()
-    return
-
-def chan():
-    system('cls')
-    while True:
-
-        auradio()
-        print("1 ~ Radio")
-        print("2 ~ Youtube")
-
-        inpm = input("\n$ ")
-        
-        if(inpm.lower() == "1"):
-            radiochan()
-        
-        elif(inpm.lower() == "2"):
-            youtubechan()
-        
-        elif (inpm.lower() == "radioactive"):
-            system('cls')
-            chanplayer("files/radioahhtive.mp3")
-
-        elif (inpm.lower() == "yamete"):
-            system('cls')
-            chanplayer("files/yametekudasai.mp3")
-
-        elif (inpm.lower() == "taylor"):
-            taylor()      
-
-        else:
-            system('cls')
-            chanplayer("files/wtf.mp3")
-
-def taylor():
-    system('cls')
-    print('''
-        My friends: You okay?
-        Me: Yeah, I’m fine.
-
-        My headphones:
-
-        Taylor Swift - All Too Well
-        0:35 ━❍──────── -5:32
-        ↻     ⊲  Ⅱ  ⊳     ↺
-        VOLUME: ▲ 200%
-        
-        ''')
-    sleep(2)
-    system('cls')
+        stdscr.refresh()
 
 if __name__ == "__main__":
-    system('cls')
-    chan()
+    stdscr.clear()
+    stdscr.refresh()
+    auradio()
+    radioset()
+
+curses.endwin()

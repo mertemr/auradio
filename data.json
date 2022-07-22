@@ -1,0 +1,103 @@
+[
+	{
+    "number": "0",
+		"name": "Classic Rock Florida",
+		"url": "https://cutt.ly/AvFrd9g"
+	},
+  {
+    "number": "1",
+		"name": "Megaton Cafe Radio",
+		"url": "https://cutt.ly/SvFro84"
+	},
+  {
+    "number": "2",
+		"name": "Pal Nostalji",
+		"url": "https://cutt.ly/TvFrupx"
+	},
+  {
+    "number": "3",
+		"name": "Bakaradio",
+		"url": "https://cutt.ly/fvFreAS"
+	},
+  {
+    "number": "4",
+		"name": "PulseEDM",
+		"url": "http://pulseedm.cdnstream1.com:8124/1373_128"
+	},
+  {
+    "number": "5",
+		"name": "Magic 80s Florida",
+		"url": "http://airspectrum.cdnstream1.com:8018/1606_192"
+	},
+  {
+    "number": "6",
+		"name": "Motown Magic Oldies",
+		"url": "http://airspectrum.cdnstream1.com:8024/1302_192"
+	},
+  {
+    "number": "7",
+		"name": "Easy Hits Florida",
+		"url": "http://airspectrum.cdnstream1.com:8114/1648_128"
+	},
+  {
+    "number": "8",
+		"name": "Tsubaki Web Radio",
+		"url": "http://stream.tsubakianimeradio.com:9000/stream/1/"
+	},
+  {
+    "number": "9",
+		"name": "Party Vibe",
+		"url": "http://www.partyviberadio.com:8032/stream/3/"
+	},
+  {
+    "number": "10",
+		"name": "Guerrilla Radio",
+		"url": "http://s2.stationplaylist.com:9460/guerrilla"
+	},
+  {
+    "number": "11",
+		"name": "PsyStream",
+		"url": "http://radio.psymusic.co.uk:8040/hifi.mp3"
+	},
+  {
+    "number": "12",
+		"name": "Energy 106 Belfast",
+		"url": "http://192.111.140.6:9633/stream/1/"
+	},
+  {
+    "number": "13",
+		"name": "Sidestreet Radio",
+		"url": "http://204.141.167.19:9780/stream/1/"
+	},
+  {
+    "number": "14",
+		"name": "Beach Chill",
+		"url": "http://larry.torontocast.com:1820/stream/1/"
+	},
+  {
+    "number": "15",
+		"name": "Radio G!",
+		"url": "http://192.111.140.6:8405/stream/1/"
+	},
+  {
+    "number": "16",
+		"name": "Ethereal Radio",
+		"url": "https://us4.internet-radio.com/proxy/etherealradio?mp=/live"
+	},
+  {
+    "number": "17",
+		"name": "Doksanlar",
+		"url": "http://37.247.98.8/stream/166/"
+	},
+  {
+    "number": "18",
+		"name": "Majestic Jukebox",
+		"url": "https://uk3.internet-radio.com/proxy/majesticjukebox?mp=/live"
+	},
+  {
+    "number": "19",
+		"name": "45'lik",
+		"url": "http://stream.radyo45lik.com:4545/stream"
+	}
+
+]
